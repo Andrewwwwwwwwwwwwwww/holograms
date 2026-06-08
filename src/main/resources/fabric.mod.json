@@ -1,0 +1,24 @@
+{
+  "schemaVersion": 1,
+  "id": "holograms",
+  "version": "${version}",
+  "name": "Holograms",
+  "description": "Server-side holograms using native display entities. Create floating text, item and block holograms with multiple lines and click actions (run command / send message / teleport / play sound). Vanilla clients need nothing installed. Commands: /holograms (aliases /holo, /hd).",
+  "authors": ["Andrewwwwwwwwwwwwwww"],
+  "license": "All Rights Reserved",
+  "environment": "*",
+  "entrypoints": {
+    "main": ["io.github.andrewwwwwwwwwwwwwww.holograms.Holograms"]
+  },
+  "contact": {
+    "homepage": "https://github.com/Andrewwwwwwwwwwwwwww/holograms",
+    "sources": "https://github.com/Andrewwwwwwwwwwwwwww/holograms",
+    "issues": "https://github.com/Andrewwwwwwwwwwwwwww/holograms/issues"
+  },
+  "icon": "assets/holograms/icon.png",
+  "depends": {
+    "fabricloader": ">=0.19.2",
+    "fabric-api": ">=0.148.2",
+    "minecraft": "~26.1"
+  }
+}
