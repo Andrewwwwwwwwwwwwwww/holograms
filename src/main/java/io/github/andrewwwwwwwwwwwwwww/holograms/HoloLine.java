@@ -1,81 +1,73 @@
 package io.github.andrewwwwwwwwwwwwwww.holograms;
 
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.ListTag;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
- * A single line of a hologram. A line is one of:
- * <ul>
- *   <li>{@link Kind#TEXT} — a string with {@code &} colour codes (rendered as a text_display),</li>
- *   <li>{@link Kind#ITEM} — a floating item icon (item_display), {@code resource} = item id,</li>
- *   <li>{@link Kind#BLOCK} — a floating block model (block_display), {@code resource} = block id.</li>
- * </ul>
+ * A horizontal line of a hologram, made of one or more {@link HoloElement}s. A single text element is
+ * an ordinary text line; multiple elements are laid out side-by-side (a "row"), which is handy for
+ * showing crafting recipes (e.g. several item/block icons in a row).
  */
 public final class HoloLine {
-    public enum Kind { TEXT, ITEM, BLOCK }
-
-    public Kind kind;
-    /** For TEXT lines: the raw text with {@code &} colour codes. */
-    public String text = "";
-    /** For ITEM/BLOCK lines: the registry id (e.g. {@code minecraft:diamond}). */
-    public String resource = "";
+    public final List<HoloElement> elements = new ArrayList<>();
 
     public HoloLine() {}
 
     public static HoloLine text(String text) {
         HoloLine l = new HoloLine();
-        l.kind = Kind.TEXT;
-        l.text = text;
+        l.elements.add(HoloElement.text(text));
         return l;
     }
 
-    public static HoloLine item(String itemId) {
+    public static HoloLine of(HoloElement element) {
         HoloLine l = new HoloLine();
-        l.kind = Kind.ITEM;
-        l.resource = itemId;
+        l.elements.add(element);
         return l;
     }
 
-    public static HoloLine block(String blockId) {
-        HoloLine l = new HoloLine();
-        l.kind = Kind.BLOCK;
-        l.resource = blockId;
-        return l;
+    public boolean isRow() {
+        return elements.size() > 1;
     }
 
-    /** Vertical space this line occupies, in blocks (used to stack lines downward). */
+    /** True if this line is a single text element (the common case). */
+    public boolean isSingleText() {
+        return elements.size() == 1 && elements.get(0).kind == HoloElement.Kind.TEXT;
+    }
+
     public double height() {
-        return switch (kind) {
-            case TEXT -> 0.27;
-            case ITEM -> 0.45;
-            case BLOCK -> 0.60;
-        };
+        double h = 0;
+        for (HoloElement e : elements) h = Math.max(h, e.height());
+        return h <= 0 ? 0.30 : h;
     }
 
     public String describe() {
-        return switch (kind) {
-            case TEXT -> "\"" + text + "\"";
-            case ITEM -> "item " + resource;
-            case BLOCK -> "block " + resource;
-        };
+        if (elements.isEmpty()) return "(empty)";
+        if (elements.size() == 1) return elements.get(0).describe();
+        StringBuilder sb = new StringBuilder("row[");
+        for (int i = 0; i < elements.size(); i++) {
+            if (i > 0) sb.append(", ");
+            sb.append(elements.get(i).describe());
+        }
+        return sb.append("]").toString();
     }
 
     public CompoundTag save() {
         CompoundTag tag = new CompoundTag();
-        tag.putString("Kind", kind.name());
-        tag.putString("Text", text);
-        tag.putString("Resource", resource);
+        ListTag list = new ListTag();
+        for (HoloElement e : elements) list.add(list.size(), e.save());
+        tag.put("Elements", list);
         return tag;
     }
 
     public static HoloLine load(CompoundTag tag) {
         HoloLine l = new HoloLine();
-        l.kind = switch (tag.getStringOr("Kind", "TEXT")) {
-            case "ITEM" -> Kind.ITEM;
-            case "BLOCK" -> Kind.BLOCK;
-            default -> Kind.TEXT;
-        };
-        l.text = tag.getStringOr("Text", "");
-        l.resource = tag.getStringOr("Resource", "");
+        ListTag list = tag.getListOrEmpty("Elements");
+        for (int i = 0; i < list.size(); i++) l.elements.add(HoloElement.load(list.getCompoundOrEmpty(i)));
+        // Backwards-compat: a 0.1.0 line stored its fields directly (no Elements list).
+        if (l.elements.isEmpty()) l.elements.add(HoloElement.load(tag));
         return l;
     }
 }

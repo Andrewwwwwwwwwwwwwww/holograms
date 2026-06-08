@@ -17,6 +17,8 @@ public final class Hologram {
     public String dimension;
     public double x, y, z;
     public float yaw;
+    /** Extra vertical gap between lines, in blocks. Tunable in the editor. */
+    public double lineSpacing = 0.08;
 
     public final List<HoloLine> lines = new ArrayList<>();
 
@@ -36,10 +38,13 @@ public final class Hologram {
         return !clickCommands.isEmpty() || clickMessage != null || clickSound != null;
     }
 
-    /** Total height of all stacked lines, in blocks. */
+    /** Total height of all stacked lines (including the gaps between them), in blocks. */
     public double totalHeight() {
         double h = 0;
-        for (HoloLine l : lines) h += l.height();
+        for (int i = 0; i < lines.size(); i++) {
+            h += lines.get(i).height();
+            if (i < lines.size() - 1) h += lineSpacing;
+        }
         return h;
     }
 
@@ -51,6 +56,7 @@ public final class Hologram {
         tag.putDouble("Y", y);
         tag.putDouble("Z", z);
         tag.putFloat("Yaw", yaw);
+        tag.putDouble("LineSpacing", lineSpacing);
 
         ListTag lineList = new ListTag();
         for (HoloLine l : lines) lineList.add(lineList.size(), l.save());
@@ -75,6 +81,7 @@ public final class Hologram {
         h.y = tag.getDoubleOr("Y", 0);
         h.z = tag.getDoubleOr("Z", 0);
         h.yaw = tag.getFloatOr("Yaw", 0);
+        h.lineSpacing = tag.getDoubleOr("LineSpacing", 0.08);
 
         ListTag lineList = tag.getListOrEmpty("Lines");
         for (int i = 0; i < lineList.size(); i++) h.lines.add(HoloLine.load(lineList.getCompoundOrEmpty(i)));

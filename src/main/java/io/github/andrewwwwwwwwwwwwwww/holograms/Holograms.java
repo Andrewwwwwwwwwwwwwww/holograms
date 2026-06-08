@@ -6,7 +6,9 @@ import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
 import net.fabricmc.fabric.api.event.player.UseEntityCallback;
 import net.minecraft.commands.CommandSourceStack;
+import net.minecraft.core.Holder;
 import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.network.protocol.game.ClientboundSoundPacket;
 import net.minecraft.resources.Identifier;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerPlayer;
@@ -56,7 +58,7 @@ public class Holograms implements ModInitializer {
         });
 
         CommandRegistrationCallback.EVENT.register((dispatcher, registryAccess, environment) ->
-                HologramCommands.register(dispatcher));
+                HologramCommands.register(dispatcher, registryAccess));
     }
 
     private static void runClickActions(ServerPlayer sp, Hologram h) {
@@ -65,10 +67,13 @@ public class Holograms implements ModInitializer {
         }
         if (h.clickSound != null) {
             Identifier id = Identifier.tryParse(h.clickSound);
-            SoundEvent event = id == null ? null : BuiltInRegistries.SOUND_EVENT.getOptional(id).orElse(null);
-            if (event != null) {
-                sp.level().playSound(null, sp.getX(), sp.getY(), sp.getZ(),
-                        event, SoundSource.PLAYERS, 1.0f, 1.0f);
+            Holder<SoundEvent> holder = id == null
+                    ? null
+                    : BuiltInRegistries.SOUND_EVENT.get(id).map(r -> (Holder<SoundEvent>) r).orElse(null);
+            if (holder != null) {
+                // Send straight to the clicking player so it always plays for them.
+                sp.connection.send(new ClientboundSoundPacket(holder, SoundSource.MASTER,
+                        sp.getX(), sp.getY(), sp.getZ(), 1.0f, 1.0f, sp.level().getRandom().nextLong()));
             }
         }
         if (!h.clickCommands.isEmpty()) {
