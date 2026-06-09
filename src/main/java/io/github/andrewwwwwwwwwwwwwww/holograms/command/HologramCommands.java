@@ -69,6 +69,10 @@ public final class HologramCommands {
                 .then(Commands.argument("value", com.mojang.brigadier.arguments.DoubleArgumentType.doubleArg(0.0, 2.0))
                         .executes(HologramCommands::spacing))));
 
+        root.then(Commands.literal("background").then(named()
+                .then(Commands.literal("on").executes(c -> setBackground(c, true)))
+                .then(Commands.literal("off").executes(c -> setBackground(c, false)))));
+
         root.then(Commands.literal("addline").then(named()
                 .then(Commands.argument("text", StringArgumentType.greedyString()).executes(HologramCommands::addLine))));
         root.then(Commands.literal("setline").then(named()
@@ -198,6 +202,13 @@ public final class HologramCommands {
         if (h == null) return 0;
         h.lineSpacing = com.mojang.brigadier.arguments.DoubleArgumentType.getDouble(ctx, "value");
         return afterEdit(ctx, h, String.format("Set line spacing to %.2f.", h.lineSpacing));
+    }
+
+    private static int setBackground(CommandContext<CommandSourceStack> ctx, boolean on) {
+        Hologram h = holo(ctx);
+        if (h == null) return 0;
+        h.textBackground = on;
+        return afterEdit(ctx, h, "Text background " + (on ? "enabled" : "disabled") + " on '" + h.name + "'.");
     }
 
     private static int addLine(CommandContext<CommandSourceStack> ctx) {

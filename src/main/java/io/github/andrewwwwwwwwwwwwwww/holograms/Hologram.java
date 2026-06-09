@@ -19,6 +19,8 @@ public final class Hologram {
     public float yaw;
     /** Extra vertical gap between lines, in blocks. Tunable in the editor. */
     public double lineSpacing = 0.08;
+    /** Whether text lines show the translucent dark background. Off = clean see-through text. */
+    public boolean textBackground = false;
 
     public final List<HoloLine> lines = new ArrayList<>();
 
@@ -57,6 +59,7 @@ public final class Hologram {
         tag.putDouble("Z", z);
         tag.putFloat("Yaw", yaw);
         tag.putDouble("LineSpacing", lineSpacing);
+        tag.putBoolean("TextBackground", textBackground);
 
         ListTag lineList = new ListTag();
         for (HoloLine l : lines) lineList.add(lineList.size(), l.save());
@@ -82,6 +85,7 @@ public final class Hologram {
         h.z = tag.getDoubleOr("Z", 0);
         h.yaw = tag.getFloatOr("Yaw", 0);
         h.lineSpacing = tag.getDoubleOr("LineSpacing", 0.08);
+        h.textBackground = tag.getBooleanOr("TextBackground", false);
 
         ListTag lineList = tag.getListOrEmpty("Lines");
         for (int i = 0; i < lineList.size(); i++) h.lines.add(HoloLine.load(lineList.getCompoundOrEmpty(i)));

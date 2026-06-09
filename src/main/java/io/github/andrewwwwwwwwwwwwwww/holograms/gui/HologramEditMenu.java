@@ -29,17 +29,18 @@ import java.util.List;
 /** The main hologram editor: one row per line (reorder / edit / delete) plus a control bar. */
 public final class HologramEditMenu extends ChestMenu {
     private static final int SIZE = 54;
-    private static final int LINES_PER_PAGE = 5;
+    private static final int LINES_PER_PAGE = 4;
 
-    // control-bar slots
-    private static final int ADD_TEXT = 45;
-    private static final int ADD_ITEM = 46;
-    private static final int ADD_BLOCK = 47;
-    private static final int ADD_ROW = 48;
-    private static final int CLICK_ACTIONS = 49;
-    private static final int PREV = 50;
-    private static final int NEXT = 51;
-    private static final int SPACING = 52;
+    // control-bar slots (rows 4-5)
+    private static final int ADD_TEXT = 36;
+    private static final int ADD_ITEM = 37;
+    private static final int ADD_BLOCK = 38;
+    private static final int ADD_ROW = 39;
+    private static final int CLICK_ACTIONS = 40;
+    private static final int BACKGROUND = 41;
+    private static final int PREV = 43;
+    private static final int NEXT = 44;
+    private static final int SPACING = 49;
     private static final int DONE = 53;
 
     private final ServerPlayer player;
@@ -92,6 +93,10 @@ public final class HologramEditMenu extends ChestMenu {
                 "A horizontal row of items/blocks", "Great for showing recipes"));
         container.setItem(CLICK_ACTIONS, Gui.button(Items.LEVER, "Click actions",
                 "Commands / message / sound", "run when players right-click"));
+        container.setItem(BACKGROUND, Gui.button(
+                holo.textBackground ? Items.BLACK_STAINED_GLASS : Items.GLASS,
+                "Text background: " + (holo.textBackground ? "ON" : "OFF"),
+                "Click to toggle the dark", "panel behind text lines"));
         container.setItem(PREV, page > 0 ? Gui.button(Items.RED_STAINED_GLASS_PANE, "Previous page") : ItemStack.EMPTY);
         container.setItem(NEXT, (start + LINES_PER_PAGE) < holo.lines.size()
                 ? Gui.button(Items.GREEN_STAINED_GLASS_PANE, "Next page") : ItemStack.EMPTY);
@@ -139,6 +144,11 @@ public final class HologramEditMenu extends ChestMenu {
                 RowEditMenu.open(player, holo, holo.lines.size() - 1);
             }
             case CLICK_ACTIONS -> ClickActionsMenu.open(player, holo);
+            case BACKGROUND -> {
+                holo.textBackground = !holo.textBackground;
+                apply();
+                refresh();
+            }
             case PREV -> { if (page > 0) { page--; refresh(); } }
             case NEXT -> { if ((page + 1) * LINES_PER_PAGE < holo.lines.size()) { page++; refresh(); } }
             case SPACING -> {

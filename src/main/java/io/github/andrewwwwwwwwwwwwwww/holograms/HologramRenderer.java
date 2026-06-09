@@ -64,6 +64,9 @@ public final class HologramRenderer {
                 HoloElement el = line.elements.get(i);
                 Entity e = el.createEntity(level);
                 if (e != null) {
+                    if (e instanceof Display.TextDisplay td) {
+                        td.setBackgroundColor(h.textBackground ? Display.TextDisplay.INITIAL_BACKGROUND : 0);
+                    }
                     configure(e, h.name);
                     double dx = startOffset + i * ROW_DX;
                     e.snapTo(h.x + dx, centreY + el.yCenterOffset(), h.z, h.yaw, 0.0f);

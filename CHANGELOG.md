@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.2.1 - 2026-06-07
+- **Text background toggle** — text lines no longer force the translucent dark panel (which looked bad
+  in front of glass/builds). Background now defaults to **off**; toggle per hologram with
+  `/holo background <name> on|off` or the "Text background" button in the editor. Run `/holo reload`
+  (or re-edit) to apply to holograms made before this update.
+- Editor now shows 4 lines per page with a roomier two-row control bar (added the background button).
+
 ## 0.2.0 - 2026-06-07
 - **Chest-GUI editor** — `/holo edit <name>` opens a visual editor: one row per line with move
   up/down, edit, and delete buttons; a control bar to add text/item/block/row lines, manage click
