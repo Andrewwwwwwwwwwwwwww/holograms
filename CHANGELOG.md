@@ -1,5 +1,15 @@
 # Changelog
 
+## 0.2.2 - 2026-06-16
+- **Updated to Minecraft 26.2.** Bumped `minecraft_version` to `26.2`, Fabric Loader to `0.19.3`, and
+  Fabric API to `0.152.1+26.2` (Loom stays on `1.16.2`, which builds 26.2 fine). `fabric.mod.json`
+  dependency bounds raised to `minecraft ~26.2`, `fabricloader >=0.19.3`, `fabric-api >=0.152.1`.
+- Source fixes for 26.2 API changes: entity-type constants moved to the new `EntityTypes` holder
+  (`EntityType.TEXT_DISPLAY` → `EntityTypes.TEXT_DISPLAY`, and likewise for item/block display +
+  interaction); colored items are now `ColorCollection` (`Items.BLACK_STAINED_GLASS` →
+  `Items.STAINED_GLASS.black()`, etc.); `ChatFormatting.isColor()` replaced with
+  `TextColor.fromLegacyFormat(fmt) != null`. No gameplay changes.
+
 ## 0.2.1 - 2026-06-07
 - **Text background toggle** — text lines no longer force the translucent dark panel (which looked bad
   in front of glass/builds). Background now defaults to **off**; toggle per hologram with

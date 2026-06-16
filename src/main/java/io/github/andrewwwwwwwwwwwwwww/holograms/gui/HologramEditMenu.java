@@ -94,19 +94,19 @@ public final class HologramEditMenu extends ChestMenu {
         container.setItem(CLICK_ACTIONS, Gui.button(Items.LEVER, "Click actions",
                 "Commands / message / sound", "run when players right-click"));
         container.setItem(BACKGROUND, Gui.button(
-                holo.textBackground ? Items.BLACK_STAINED_GLASS : Items.GLASS,
+                holo.textBackground ? Items.STAINED_GLASS.black() : Items.GLASS,
                 "Text background: " + (holo.textBackground ? "ON" : "OFF"),
                 "Click to toggle the dark", "panel behind text lines"));
-        container.setItem(PREV, page > 0 ? Gui.button(Items.RED_STAINED_GLASS_PANE, "Previous page") : ItemStack.EMPTY);
+        container.setItem(PREV, page > 0 ? Gui.button(Items.STAINED_GLASS_PANE.red(), "Previous page") : ItemStack.EMPTY);
         container.setItem(NEXT, (start + LINES_PER_PAGE) < holo.lines.size()
-                ? Gui.button(Items.GREEN_STAINED_GLASS_PANE, "Next page") : ItemStack.EMPTY);
+                ? Gui.button(Items.STAINED_GLASS_PANE.green(), "Next page") : ItemStack.EMPTY);
         container.setItem(SPACING, Gui.button(Items.STRING, String.format("Line spacing: %.2f", holo.lineSpacing),
                 "Left-click: +0.04", "Right-click: -0.04"));
-        container.setItem(DONE, Gui.button(Items.LIME_CONCRETE, "Done"));
+        container.setItem(DONE, Gui.button(Items.CONCRETE.lime(), "Done"));
     }
 
     private ItemStack preview(HoloLine line, int idx) {
-        ItemStack icon = line.elements.isEmpty() ? new ItemStack(Items.LIGHT_GRAY_DYE) : line.elements.get(0).icon();
+        ItemStack icon = line.elements.isEmpty() ? new ItemStack(Items.DYE.lightGray()) : line.elements.get(0).icon();
         icon.set(DataComponents.CUSTOM_NAME, Gui.styled("Line " + (idx + 1) + ": " + line.describe(), ChatFormatting.AQUA));
         icon.set(DataComponents.LORE, new ItemLore(List.of(Gui.styled("Use Edit → to change", ChatFormatting.GRAY))));
         return icon;

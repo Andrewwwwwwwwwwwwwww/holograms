@@ -40,7 +40,7 @@ public final class Colors {
                     flush(root, buf, style);
                     if (fmt == ChatFormatting.RESET) {
                         style = Style.EMPTY;
-                    } else if (fmt.isColor()) {
+                    } else if (TextColor.fromLegacyFormat(fmt) != null) {
                         style = Style.EMPTY.withColor(fmt); // a colour code resets active formats
                     } else {
                         style = style.applyFormat(fmt);

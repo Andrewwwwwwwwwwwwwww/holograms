@@ -7,7 +7,7 @@ import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.Display;
 import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.EntityTypes;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
@@ -100,7 +100,7 @@ public final class HoloElement {
     public Entity createEntity(ServerLevel level) {
         return switch (kind) {
             case TEXT -> {
-                Display.TextDisplay td = new Display.TextDisplay(EntityType.TEXT_DISPLAY, level);
+                Display.TextDisplay td = new Display.TextDisplay(EntityTypes.TEXT_DISPLAY, level);
                 td.setText(Colors.parse(text));
                 td.setBillboardConstraints(Display.BillboardConstraints.CENTER);
                 yield td;
@@ -108,7 +108,7 @@ public final class HoloElement {
             case ITEM -> {
                 Item item = lookupItem();
                 if (item == null) yield null;
-                Display.ItemDisplay disp = new Display.ItemDisplay(EntityType.ITEM_DISPLAY, level);
+                Display.ItemDisplay disp = new Display.ItemDisplay(EntityTypes.ITEM_DISPLAY, level);
                 disp.setItemStack(new ItemStack(item));
                 disp.setItemTransform(ItemDisplayContext.GROUND);
                 disp.setBillboardConstraints(Display.BillboardConstraints.CENTER);
@@ -118,7 +118,7 @@ public final class HoloElement {
             case BLOCK -> {
                 Block block = lookupBlock();
                 if (block == null) yield null;
-                Display.BlockDisplay disp = new Display.BlockDisplay(EntityType.BLOCK_DISPLAY, level);
+                Display.BlockDisplay disp = new Display.BlockDisplay(EntityTypes.BLOCK_DISPLAY, level);
                 disp.setBlockState(block.defaultBlockState());
                 // CENTER so the block always presents a readable face to the viewer.
                 disp.setBillboardConstraints(Display.BillboardConstraints.CENTER);

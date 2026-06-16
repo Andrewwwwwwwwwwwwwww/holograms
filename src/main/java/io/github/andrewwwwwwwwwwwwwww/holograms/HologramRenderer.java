@@ -7,7 +7,7 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.Display;
 import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.EntityTypes;
 import net.minecraft.world.entity.Interaction;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemDisplayContext;
@@ -78,7 +78,7 @@ public final class HologramRenderer {
 
         if (h.hasClickAction()) {
             double total = h.totalHeight();
-            Interaction interaction = new Interaction(EntityType.INTERACTION, level);
+            Interaction interaction = new Interaction(EntityTypes.INTERACTION, level);
             interaction.setWidth(1.4f);
             interaction.setHeight((float) Math.max(0.5, total));
             interaction.setResponse(true);
