@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.0.0 - 2026-06-27
+- **Stable 1.0.0 release.** No gameplay changes from 0.2.2 — marks the mod stable and aligns it with the
+  unified release across the mod suite.
+- Jar filenames now include the Minecraft version (e.g. `holograms-1.0.0+mc26.2.jar`).
+- A parallel **MC 26.1.2** build is now published (`holograms-1.0.0+mc26.1.2.jar`).
+
 ## 0.2.2 - 2026-06-16
 - **Updated to Minecraft 26.2.** Bumped `minecraft_version` to `26.2`, Fabric Loader to `0.19.3`, and
   Fabric API to `0.152.1+26.2` (Loom stays on `1.16.2`, which builds 26.2 fine). `fabric.mod.json`
